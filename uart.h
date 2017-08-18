@@ -1,4 +1,5 @@
-/* UART Functions */
+//UART Functions 
+
 void usart_init(uint16_t ubrr_value)
 {
   /*Set Frame Format
@@ -28,6 +29,6 @@ void usart_transmit (unsigned int data)
 	if (data & 0x0100) 
 		UCSRB |= (1 << TXB8); 
 
-	//Get that data outa !
+	//Put data in buffer to be transmitted 
 	UDR = data;
 }

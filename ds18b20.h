@@ -1,4 +1,5 @@
-//ds18b20 Macros//
+//ds18b20 Macros
+
 //setup connection
 #define DS18B20_PORT 	PORTC
 #define DS18B20_DDR 	DDRC
@@ -18,7 +19,7 @@
 #define DS18B20_CMD_ALARMSEARCH 	0xec
 #define DS18B20_STOPINTERRUPTONREAD 0
 
-/*ds18b20 communication functions*/
+// ds18b20  functions
 
 //ds18b20 init
 uint8_t ds18b20_reset() {
@@ -42,7 +43,7 @@ uint8_t ds18b20_reset() {
 }
 
  //write one bit 
-void ds18b20_writebit(uint8_t bit){
+void ds18b20_writebit(uint8_t bit) {
 	//low for 1uS
 	DS18B20_PORT &= ~ (1<<DS18B20_DQ); //low
 	DS18B20_DDR |= (1<<DS18B20_DQ); //output
@@ -58,7 +59,7 @@ void ds18b20_writebit(uint8_t bit){
 }
 
 //read one bit
-uint8_t ds18b20_readbit(void){
+uint8_t ds18b20_readbit(void) {
 	uint8_t bit=0;
 
 	//low for 1uS
@@ -82,18 +83,18 @@ uint8_t ds18b20_readbit(void){
 
 
 //write one byte
-void ds18b20_writebyte(uint8_t byte){
+void ds18b20_writebyte(uint8_t byte) {
 	uint8_t i=8;
-	while(i--){
+	while(i--) {
 		ds18b20_writebit(byte&1);
 		byte >>= 1;
 	}
 }
 
 //read one byte
-uint8_t ds18b20_readbyte(void){
+uint8_t ds18b20_readbyte(void) {
 	uint8_t i=8, n=0;
-	while(i--){
+	while(i--) {
 		n >>= 1;
 		n |= (ds18b20_readbit()<<7);
 	}
@@ -106,29 +107,21 @@ float ds18b20_gettemp() {
 	uint8_t temperature_h;
 	float temperature_full = 0;
 
-	#if DS18B20_STOPINTERRUPTONREAD == 1
-	cli();
-	#endif
-
-	ds18b20_reset(); //reset
-	ds18b20_writebyte(DS18B20_CMD_SKIPROM); //skip ROM
-	ds18b20_writebyte(DS18B20_CMD_CONVERTTEMP); //start temperature conversion
+	ds18b20_reset(); 
+	ds18b20_writebyte(DS18B20_CMD_SKIPROM); 
+	ds18b20_writebyte(DS18B20_CMD_CONVERTTEMP); 
 
 	while(!ds18b20_readbit()); //wait until conversion is complete
 
-	ds18b20_reset(); //reset
-	ds18b20_writebyte(DS18B20_CMD_SKIPROM); //skip ROM
-	ds18b20_writebyte(DS18B20_CMD_RSCRATCHPAD); //read scratchpad
+	ds18b20_reset(); 
+	ds18b20_writebyte(DS18B20_CMD_SKIPROM); 
+	ds18b20_writebyte(DS18B20_CMD_RSCRATCHPAD); 
 
 	//read 2 byte from scratchpad
 	temperature_l = ds18b20_readbyte();
 	temperature_h = ds18b20_readbyte();
-
-	#if DS18B20_STOPINTERRUPTONREAD == 1
-	sei();
-	#endif
 	
-	//send data to computer using UART for debugging
+	//send data to computer using UART for debugging and plotting data
 	//usart_transmit(temperature_l);
 	//usart_transmit(temperature_h);
 
