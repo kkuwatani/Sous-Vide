@@ -1,4 +1,4 @@
-//UART Functions 
+//UART functions
 
 void usart_init(uint16_t ubrr_value)
 {

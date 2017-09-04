@@ -1,4 +1,4 @@
-//ds18b20 Macros
+//ds18b20 macros
 
 //setup connection
 #define DS18B20_PORT 	PORTC
