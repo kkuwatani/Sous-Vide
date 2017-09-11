@@ -94,9 +94,8 @@ ISR(INT0_vect) {
 
 // ADC ISR used for choosing temperature set point 
 ISR(ADC_vect) {
-	adc_receive();
-	lcd_send_position_int(13, 1, result, 4);
-    set_point = result;
+	set_point = adc_receive();
+	lcd_send_position_int(13, 1, set_point, 4);
     adc_start_conversion();
 }
 
@@ -105,9 +104,11 @@ int main(void) {
 	button_init();
 	usart_init(25);
 	pwm_init();
-	adc_init();
 	lcd_init();
 	lcd_send_position_string(1, 1, "Set Temp:");
+	adc_init();
+	adc_interrupt_enable();
+	adc_start_conversion();
 
 	//enable global interrupt
 	sei();

@@ -4,8 +4,8 @@ void adc_init() {
 	ADMUX |= (1<<REFS0) | (1<<REFS1);
 	ADCSRA |= 1<<ADEN;
 	//start first adc conversion with interrupt enabled
-	adc_interrupt_enable();
-	adc_start_conversion();
+//	adc_interrupt_enable();
+//	adc_start_conversion();
 
 }
 
